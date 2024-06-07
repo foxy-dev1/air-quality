@@ -23,12 +23,16 @@ jobs:
 
       - name: Create conda environment
         run: |
+          echo "Creating conda environment"
           conda create --name airquality python=3.8 -y
+          echo "Installing dependencies"
           conda install --name airquality -c conda-forge fbprophet pandas altair streamlit -y
+          echo "Installing pip dependencies"
           conda run --name airquality pip install -r requirements.txt
 
       - name: Run data_capture.py
         run: |  # Executes the script with error handling
+          echo "Running data_capture.py"
           conda run --name airquality python data_capture.py || (echo "Error running data_capture.py" && exit 1)
           
       - name: List Files
