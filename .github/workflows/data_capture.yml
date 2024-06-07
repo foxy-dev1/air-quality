@@ -3,7 +3,6 @@ name: Daily Data Capture for
 on:
   schedule:
     - cron: '35 7 * * *'
-
   workflow_dispatch:
 
 jobs:
@@ -15,25 +14,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4  # Checks out the code repository
 
-      - name: Set up Miniconda
-        uses: goanpeca/setup-miniconda@v1
-        with:
-          auto-update-conda: true
-          python-version: 3.8
+      - name: Install Miniconda
+        run: |
+          wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+          bash miniconda.sh -b -p $HOME/miniconda
+          echo "$HOME/miniconda/bin" >> $GITHUB_PATH
+          source $HOME/miniconda/bin/activate
 
       - name: Create conda environment
         run: |
-          echo "Creating conda environment"
           conda create --name airquality python=3.8 -y
-          echo "Installing dependencies"
-          conda install --name airquality -c conda-forge fbprophet pandas altair streamlit -y
-          echo "Installing pip dependencies"
-          conda run --name airquality pip install -r requirements.txt
+          conda activate airquality
+          conda install -c conda-forge fbprophet pandas altair streamlit -y
+          pip install -r requirements.txt
 
       - name: Run data_capture.py
         run: |  # Executes the script with error handling
-          echo "Running data_capture.py"
-          conda run --name airquality python data_capture.py || (echo "Error running data_capture.py" && exit 1)
+          source $HOME/miniconda/bin/activate airquality
+          python data_capture.py || (echo "Error running data_capture.py" && exit 1)
           
       - name: List Files
         run: ls -R
