@@ -22,7 +22,7 @@ def get_data():
         return None
 
 
-def update_csv(data, csv_filename= '/home/runner/work/airquality-data-get-automate/airquality-data-get-automate/air_quality_data.csv'):
+def update_csv(data, csv_filename= '/home/runner/work/air-quality/air-quality/air_quality_data.csv'):
     header = ['Timestamp', 'PM2.5', 'PM10','O3','NO2','SO2', 'CO']
     row = [
         datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
