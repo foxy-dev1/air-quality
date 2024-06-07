@@ -5,6 +5,7 @@ on:
     - cron: '35 7 * * *'
 
   workflow_dispatch:
+
 jobs:
   data_capture:
     runs-on: ubuntu-latest
@@ -14,18 +15,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4  # Checks out the code repository
 
-      - uses: actions/setup-python@v4  # Sets up Python environment
+      - name: Set up Miniconda
+        uses: goanpeca/setup-miniconda@v1
         with:
-          python-version: 3.x
+          auto-update-conda: true
+          python-version: 3.8
 
-      - name: Install dependencies
-        run: |  # Installs dependencies from requirements.txt
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+      - name: Create conda environment
+        run: |
+          conda create --name airquality python=3.8 -y
+          conda install --name airquality -c conda-forge fbprophet pandas altair streamlit -y
+          conda run --name airquality pip install -r requirements.txt
 
       - name: Run data_capture.py
         run: |  # Executes the script with error handling
-          python data_capture.py || (echo "Error running data_capture.py" && exit 1)
+          conda run --name airquality python data_capture.py || (echo "Error running data_capture.py" && exit 1)
+          
       - name: List Files
         run: ls -R
 
@@ -35,5 +40,4 @@ jobs:
           git config user.name "foxy-dev1"
           git add air_quality_data.csv
           git commit -m "Add generated CSV file"
-          git push origin main 
-
+          git push origin main
