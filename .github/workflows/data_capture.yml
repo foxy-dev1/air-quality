@@ -1,0 +1,39 @@
+name: Daily Data Capture for
+
+on:
+  schedule:
+    - cron: '35 7 * * *'
+
+  workflow_dispatch:
+jobs:
+  data_capture:
+    runs-on: ubuntu-latest
+    env:
+      AIR_QUALITY_API: ${{ secrets.AIR_QUALITY_API }}
+      
+    steps:
+      - uses: actions/checkout@v4  # Checks out the code repository
+
+      - uses: actions/setup-python@v4  # Sets up Python environment
+        with:
+          python-version: 3.x
+
+      - name: Install dependencies
+        run: |  # Installs dependencies from requirements.txt
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run data_capture.py
+        run: |  # Executes the script with error handling
+          python data_capture.py || (echo "Error running data_capture.py" && exit 1)
+      - name: List Files
+        run: ls -R
+
+      - name: Add and commit CSV file
+        run: |
+          git config user.email "brownpandadev7@gmail.com"
+          git config user.name "foxy-dev1"
+          git add air_quality_data.csv
+          git commit -m "Add generated CSV file"
+          git push origin main 
+
