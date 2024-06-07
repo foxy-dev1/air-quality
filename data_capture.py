@@ -7,7 +7,7 @@ def get_data():
     
     api_key = os.environ.get('AIR_QUALITY_API')
 
-    aqicn_base_url = 'https://api.waqi.info/feed/Kurla, Mumbai, India '
+    aqicn_base_url = 'https://api.waqi.info/feed/Nerul, Navi Mumbai, India'
 
     aqicn_url = f'{aqicn_base_url}?token={api_key}'
 
