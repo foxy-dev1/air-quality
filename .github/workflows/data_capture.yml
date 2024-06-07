@@ -20,18 +20,18 @@ jobs:
           bash miniconda.sh -b -p $HOME/miniconda
           echo "$HOME/miniconda/bin" >> $GITHUB_PATH
           source $HOME/miniconda/bin/activate
+          conda init bash
+          source ~/.bashrc
 
       - name: Create conda environment
         run: |
           conda create --name airquality python=3.8 -y
-          conda activate airquality
-          conda install -c conda-forge fbprophet pandas altair streamlit -y
-          pip install -r requirements.txt
+          conda install -n airquality -c conda-forge fbprophet pandas altair streamlit -y
+          conda run -n airquality pip install -r requirements.txt
 
       - name: Run data_capture.py
         run: |  # Executes the script with error handling
-          source $HOME/miniconda/bin/activate airquality
-          python data_capture.py || (echo "Error running data_capture.py" && exit 1)
+          conda run -n airquality python data_capture.py || (echo "Error running data_capture.py" && exit 1)
           
       - name: List Files
         run: ls -R
