@@ -39,9 +39,12 @@ def update_csv(data, csv_filename= '/home/runner/work/air-quality/air-quality/ai
     try:
         os.makedirs(os.path.dirname(csv_filename), exist_ok=True)
 
+        file_exists = os.path.isfile(csv_filename) and os.path.getsize(csv_filename) >0
+
         with open(csv_filename, 'a', newline='') as csvfile:
             csv_writer = csv.writer(csvfile)
-            if csvfile.tell() == 0:
+
+            if not file_exists:
                 csv_writer.writerow(header)
             csv_writer.writerow(row)
         print("Data successfully added to CSV.")
