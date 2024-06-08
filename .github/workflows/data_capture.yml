@@ -31,7 +31,7 @@ jobs:
 
       - name: Add and commit CSV file
         run: |
-          git config user.email "${{ secrets.GITHUB_EMAIL }}"
+          git config user.email "${{ secrets.EMAIL }}"
           git config user.name "foxy-dev1"
           git add air_quality_data.csv
           git commit -m "Add generated CSV file"
