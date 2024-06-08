@@ -1,0 +1,35 @@
+name: Retraining The Model
+
+on:
+    schedule:
+        - cron: '0 15 * * 0'
+
+    workflow_dispatch:
+jobs:
+
+    retraining_model_every_week:
+
+        runs-on: ubuntu-latest
+        
+        steps: 
+            - uses: actions/checkout@v4
+
+            - name: Install Miniconda
+              run: |
+                wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+                bash miniconda.sh -b -p $HOME/miniconda
+                echo "$HOME/miniconda/bin" >> $GITHUB_PATH
+                source $HOME/miniconda/bin/activate
+                conda init bash
+                source ~/.bashrc
+
+            - name: Create conda environment
+              run: |
+                  conda create --name airquality python=3.8 -y
+                  conda install -n airquality -c conda-forge fbprophet pandas altair streamlit -y
+                  conda run -n airquality pip install -r requirements.txt
+            
+            - name: Run streamlit_ui.py
+              run: |
+                conda run -n airquality python streamlit_ui.py || (echo "Error running streamlit_ui.py" && exit 1)
+                
