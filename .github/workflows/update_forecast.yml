@@ -23,8 +23,9 @@ jobs:
     - name: Create environment
       run: conda env create -f env.yml
 
-    - name: Activate environment
-      run: source activate airquality-forecast
+
+    - name: Install dependencies
+      run: conda run -n airquality-forecast pip install streamlit
 
     - name: Run forecast update script
       env:
