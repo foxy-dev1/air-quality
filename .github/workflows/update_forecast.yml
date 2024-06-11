@@ -3,10 +3,9 @@ name: Update Air Quality Forecast
 on:
   schedule:
     - cron: '0 8 * * 0'
-  push:
-    branches:
-      - main
-
+  
+  
+  workflow_dispatch:  
 jobs:
   update-forecast:
     runs-on: ubuntu-latest
