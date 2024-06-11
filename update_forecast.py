@@ -28,7 +28,7 @@ forecast_csv = forecast_future.to_csv(index=False)
 
 token = os.getenv('TOKEN_GITHUB')
 repo_name = 'foxy-dev1/air-quality'
-file_path = 'forecast.csv'
+file_path = '/home/runner/work/air-quality/air-quality/forecast.csv'
 commit_message = 'update forecast data'
 
 g = Github(token)
