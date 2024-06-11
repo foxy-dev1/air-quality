@@ -1,0 +1,32 @@
+name: Update Air Quality Forecast
+
+on:
+  schedule:
+    - cron: '0 8 * * 0'
+  push:
+    branches:
+      - main
+
+jobs:
+  update-forecast:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Conda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        auto-activate-base: false
+
+    - name: Create environment
+      run: conda env create -f env.yml
+
+    - name: Activate environment
+      run: source activate airquality-forecast
+
+    - name: Run forecast update script
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: python forecast.py
