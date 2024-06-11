@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-from datetime import date, timedelta
+from datetime import datetime, timedelta
 import numpy as np
 from prophet import Prophet
 import os
@@ -38,13 +38,13 @@ print(f"Rate limit resets at: {rate_limit.reset}")
 
 # If rate limit is exceeded, exit early
 if rate_limit.remaining == 0:
-    reset_time = (rate_limit.reset - datetime.datetime.utcnow()).total_seconds()
+    reset_time = (rate_limit.reset - datetime.utcnow()).total_seconds()
     print(f"Rate limit exceeded. Waiting for {reset_time} seconds until reset.")
     exit(1)
 
 # Define repository details
 repo_name = 'foxy-dev1/air-quality'
-file_path = '/home/runner/work/air-quality/air-quality/forecast.csv'  # Adjust to the correct path in your repo
+file_path = 'forecast.csv'  # Adjust this to the correct path in your repo
 commit_message = 'update forecast data'
 
 # Get the repository
@@ -57,14 +57,24 @@ def get_file_contents(repo, file_path):
         print("File contents retrieved successfully.")
         return contents
     except Exception as e:
-        raise e
+        if e.status == 404:
+            print("File not found. Creating a new file.")
+            return None
+        else:
+            raise e
 
 # Get the file contents
 contents = get_file_contents(repo, file_path)
 
-# Update the file in the repository
+# Create or update the file in the repository
 try:
-    repo.update_file(contents.path, commit_message, forecast_csv, contents.sha)
-    print("File updated successfully.")
+    if contents is None:
+        # Create the file if it doesn't exist
+        repo.create_file(file_path, commit_message, forecast_csv)
+        print("File created successfully.")
+    else:
+        # Update the file if it exists
+        repo.update_file(contents.path, commit_message, forecast_csv, contents.sha)
+        print("File updated successfully.")
 except Exception as e:
     print(f"Error updating file: {e}")
