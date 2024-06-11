@@ -44,7 +44,7 @@ if rate_limit.remaining == 0:
 
 # Define repository details
 repo_name = 'foxy-dev1/air-quality'
-file_path = 'forecast.csv'  # Adjust to the correct path in your repo
+file_path = '/home/runner/work/air-quality/air-quality/forecast.csv'  # Adjust to the correct path in your repo
 commit_message = 'update forecast data'
 
 # Get the repository
