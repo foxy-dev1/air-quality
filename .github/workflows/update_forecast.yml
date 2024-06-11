@@ -29,4 +29,4 @@ jobs:
     - name: Run forecast update script
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
-      run: python forecast.py
+      run: python update_forecast.py
