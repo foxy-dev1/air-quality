@@ -8,24 +8,31 @@ import numpy as np
 
 forecast_future = pd.read_csv('future_forecast.csv')
 
+forecast_future['ds'] = pd.to_datetime(forecast_future['ds'])
+
 today = date.today()
-weekday_name = today.strftime('%A')
 
 Day = []
 aqi_values = []
 
-for x in (range(7)):
-    date = today + timedelta(x)
-    weekday_name = date.strftime('%A')
-    aqi = np.floor(forecast_future.loc[forecast_future['ds']==pd.Timestamp(date),'yhat'].values[0])
-
-    Day.append(weekday_name)
-    aqi_values.append(aqi)
+for x in range(7):
+    current_date = today + timedelta(days=x)
+    weekday_name = current_date.strftime('%A')
     
+    forecast_row = forecast_future.loc[forecast_future['ds'] == pd.Timestamp(current_date)]
+    
+    if not forecast_row.empty:
+        aqi = np.floor(forecast_row['yhat'].values[0])
+        Day.append(weekday_name)
+        aqi_values.append(aqi)
+    else:
+        print(f"Warning: No forecast available for {current_date}")
+        Day.append(weekday_name)
+        aqi_values.append(None)
 
-dict = {'Day':Day,'AQI':aqi_values}
+forecast_dict = {'Day': Day, 'AQI': aqi_values}
+df = pd.DataFrame(forecast_dict)
 
-df = pd.DataFrame(dict)
 
 
 def aqi_color(aqi):
@@ -55,22 +62,20 @@ st.write('This app shows the AQI values for each day of the week.')
 st.subheader('AQI Bar Chart')
 bars = alt.Chart(df).mark_bar().encode(
     x=alt.X('Day'),
-    y='AQI',
+    y=alt.Y('AQI', scale=alt.Scale(domain=[0, df['AQI'].max() + 10])),
     color=alt.Color('Color:N', scale=None)
 ).properties(
     width=600,
     height=400
 )
 
-
 text = bars.mark_text(
     align='center',
     baseline='bottom',
-    dy=-10 
+    dy=-15  # Adjusted text position
 ).encode(
     text='AQI'
 )
-
 
 chart = bars + text
 
