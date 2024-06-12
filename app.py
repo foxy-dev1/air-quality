@@ -3,27 +3,10 @@ import pandas as pd
 import altair as alt
 from datetime import date,timedelta
 import numpy as np
-from prophet import Prophet
 
 
 
-filtered_df = pd.read_csv('data/filtered_df.csv')
-
-test_df = pd.read_csv('data/test_df.csv')
-
-combined_df = pd.concat([filtered_df,test_df],ignore_index=True)
-
-combined_df.rename(columns={'index':'ds','pm25':'y'},inplace=True)
-
-
-model = Prophet(interval_width=0.80,yearly_seasonality=True)
-
-model.fit(combined_df)
-
-future = model.make_future_dataframe(periods=7)
-forecast_future = model.predict(future)
-
-
+forecast_future = pd.read_csv('future_forecast.csv')
 
 today = date.today()
 weekday_name = today.strftime('%A')
