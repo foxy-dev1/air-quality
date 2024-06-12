@@ -18,7 +18,7 @@ combined_df.rename(columns={'index': 'ds', 'pm25': 'y'}, inplace=True)
 model = Prophet(interval_width=0.80, yearly_seasonality=True)
 model.fit(combined_df)
 
-future = model.make_future_dataframe(periods=7)
+future = model.make_future_dataframe(periods=15)
 forecast_future = model.predict(future)
 
 csv_filepath = '/home/runner/work/air-quality/air-quality/future_forecast.csv'
