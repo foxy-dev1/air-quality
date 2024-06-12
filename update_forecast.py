@@ -7,7 +7,11 @@ import os
 
 
 filtered_df = pd.read_csv('data/filtered_df.csv')
-test_df = pd.read_csv('data/test_df.csv')
+test_df = pd.read_csv('air_quality_data.csv')
+test_df.drop(columns=['PM10','O3','NO2','SO2','CO'],inplace=True)
+test_df.rename(columns={'Timestamp':'index','PM2.5':'pm25'},inplace=True)
+test_df['index'] = pd.to_datetime(test_df['index']).dt.date
+
 combined_df = pd.concat([filtered_df, test_df], ignore_index=True)
 combined_df.rename(columns={'index': 'ds', 'pm25': 'y'}, inplace=True)
 
