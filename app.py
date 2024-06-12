@@ -55,7 +55,7 @@ df['Color'] = df['AQI'].apply(aqi_color)
 
 df['Day'] = pd.Categorical(df['Day'], categories=Day, ordered=True)
 
-st.title('Weekly Air Quality Index (AQI)')
+st.title('Weekly Air Quality Index (AQI) of Navi-Mumbai')
 st.write('This app shows the AQI values for each day of the week.')
 
 
