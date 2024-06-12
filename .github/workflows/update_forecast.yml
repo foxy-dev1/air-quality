@@ -2,8 +2,8 @@ name: Update Air Quality Forecast
 
 on:
   schedule:
-    - cron: '0 8 * * 5'  # Run at 8:00 AM UTC every Sunday
-  workflow_dispatch:  # Manually trigger the workflow
+    - cron: '0 8 * * 5'  # Run at 8:00 AM UTC every Friday
+  workflow_dispatch:  
 
 jobs:
   update-forecast:
