@@ -6,46 +6,45 @@ on:
   workflow_dispatch:  # Manually trigger the workflow
 
 jobs:
-    update-forecast:
-      runs-on: ubuntu-latest
-      
-      steps: 
-        - uses: actions/checkout@v2
-  
-        - name: Install Miniconda
-          run: |
-            wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-            bash miniconda.sh -b -p $HOME/miniconda
-            echo "$HOME/miniconda/bin" >> $GITHUB_PATH
-            source $HOME/miniconda/bin/activate
-            conda init bash
-            source ~/.bashrc
-  
-        - name: Create and activate conda environment
-          run: |
-            conda create --name airquality python=3.8 -y
-            source $HOME/miniconda/bin/activate
-            conda activate airquality
-            conda install -n airquality -c conda-forge prophet pandas altair streamlit numpy -y
+  update-forecast:
+    runs-on: ubuntu-latest
 
-        - name: Install additional dependencies
-          run: |
-              source $HOME/miniconda/bin/activate
-              conda activate airquality
-              pip install -r requirements.txt
-        
-        - name: Run data_capture.py
-          run: |  
-                python update_forecast.py || (echo "Error update_forecast.py" && exit 1)
-        - name: List Files
-          run: ls -R
-      
-        - name: Add and commit CSV file
-          run: |
-                git config user.email "${{ secrets.EMAIL }}"
-                git config user.name "foxy-dev1"
-                git add future_forecast.csv
-                git commit -m "Add generated CSV file"
-                git push origin main 
-      
-       
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Miniconda
+      run: |
+        wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+        bash miniconda.sh -b -p $HOME/miniconda
+        echo "$HOME/miniconda/bin" >> $GITHUB_PATH
+        source $HOME/miniconda/bin/activate
+        conda init bash
+        source ~/.bashrc
+
+    - name: Create and activate conda environment
+      run: |
+        conda create --name airquality python=3.8 -y
+        source $HOME/miniconda/bin/activate
+        conda activate airquality
+        conda install -n airquality -c conda-forge prophet pandas altair streamlit numpy -y
+
+    - name: Install additional dependencies
+      run: |
+        source $HOME/miniconda/bin/activate
+        conda activate airquality
+        pip install -r requirements.txt
+
+    - name: Run update_forecast.py
+      run: |
+        source $HOME/miniconda/bin/activate
+        conda activate airquality
+        python update_forecast.py || (echo "Error running update_forecast.py" && exit 1)
+
+    - name: Add and commit CSV file
+      run: |
+        git config --global user.email "${{ secrets.EMAIL }}"
+        git config --global user.name "foxy-dev1"
+        git add future_forecast.csv
+        git commit -m "Add generated future forecast CSV file"
+        git push origin main
+

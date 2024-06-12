@@ -1,11 +1,10 @@
-import streamlit as st
 import pandas as pd
 import altair as alt
 from datetime import datetime, timedelta
 import numpy as np
 from prophet import Prophet
 import os
-from github import Github
+
 
 filtered_df = pd.read_csv('data/filtered_df.csv')
 test_df = pd.read_csv('data/test_df.csv')
