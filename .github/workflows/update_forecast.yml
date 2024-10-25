@@ -23,7 +23,7 @@ jobs:
 
     - name: Create and activate conda environment
       run: |
-        conda create --name airquality python=3.8 -y
+        conda create --name airquality python=3.9 -y
         source $HOME/miniconda/bin/activate
         conda activate airquality
         conda install -n airquality -c conda-forge prophet pandas altair streamlit numpy -y
