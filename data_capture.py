@@ -7,9 +7,12 @@ def get_data():
     
     api_key = os.environ.get('AIR_QUALITY_API')
 
-    aqicn_base_url = 'https://api.waqi.info/feed/Nerul, Navi Mumbai, India'
+    latitude = 19.0336118
+    longitude = 73.0181395749251
 
-    aqicn_url = f'{aqicn_base_url}?token={api_key}'
+    aqicn_base_url = f'http://api.openweathermap.org/data/2.5/air_pollution?lat={latitude}&lon={longitude}'
+
+    aqicn_url = f'{aqicn_base_url}&appid={api_key}'
 
     response = requests.get(aqicn_url)
 
@@ -24,15 +27,16 @@ def get_data():
 
 def update_csv(data, csv_filename= '/home/runner/work/air-quality/air-quality/air_quality_data.csv'):
     header = ['Timestamp', 'PM2.5', 'PM10','O3','NO2','SO2', 'CO']
+    params = [[d['components']['pm2_5'],d['components']['pm10'],d['components']['o3'],d['components']['no2'],d['components']['so2'],d['components']['co']] for d in data['list']]
+
     row = [
         datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        data['data']['iaqi']['pm25']['v'],
-        data['data']['iaqi']['pm10']['v'],
-        data['data']['iaqi']['o3']['v'],
-
-        data['data']['iaqi']['no2']['v'],
-        data['data']['iaqi']['so2']['v'],
-        data['data']['iaqi']['co']['v'],
+        params[0][0],
+        params[0][1],
+        params[0][2],
+        params[0][3],
+        params[0][4],
+        params[0][5],
 
     ]
 
