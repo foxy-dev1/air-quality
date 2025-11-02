@@ -5,3 +5,4 @@ altair
 numpy
 datetime
 pygithub
+pyarrow>=15.0.0
